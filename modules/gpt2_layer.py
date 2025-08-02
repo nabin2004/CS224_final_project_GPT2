@@ -30,7 +30,12 @@ class GPT2Layer(nn.Module):
         IN THIS FUNCTION.
     """
     ### YOUR CODE HERE
-    raise NotImplementedError
+    transformed = dense_layer(output)
+    transformed = dropout(transformed)
+
+    # Residual connection
+    return input + transformed
+
 
 
   def forward(self, hidden_states, attention_mask):
@@ -43,5 +48,16 @@ class GPT2Layer(nn.Module):
     """
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    normed_hidden = self.attention_layer_norm(hidden_states)
+    attn_output = self.self_attention(normed_hidden, attention_mask)
+    hidden_states = self.add(hidden_states, attn_output, self.attention_dense, self.attention_dropout)
+
+    # --- Feed Forward Block ---
+    normed_hidden = self.out_layer_norm(hidden_states)
+    ff_output = self.interm_af(self.interm_dense(normed_hidden))
+    ff_output = self.out_dense(ff_output)
+    ff_output = self.out_dropout(ff_output)
+    hidden_states = hidden_states + ff_output  # residual
+
+    raise hidden_states
 
