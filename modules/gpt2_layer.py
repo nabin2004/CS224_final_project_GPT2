@@ -59,5 +59,5 @@ class GPT2Layer(nn.Module):
     ff_output = self.out_dropout(ff_output)
     hidden_states = hidden_states + ff_output  # residual
 
-    raise hidden_states
+    return hidden_states
 

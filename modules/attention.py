@@ -62,7 +62,7 @@ class CausalSelfAttention(nn.Module):
     # Rearrange back to [bs, seq_len, hidden_size]
     context = rearrange(context, 'b h t d -> b t (h d)')
 
-    raise context
+    return context
 
 
   def forward(self, hidden_states, attention_mask):
