@@ -34,7 +34,35 @@ class CausalSelfAttention(nn.Module):
   def attention(self, key, query, value, attention_mask):
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    # Step 1: Compute attention scores: QKT
+    attn_scores = torch.matmul(query, key.transpose(-1,-2))
+
+    # Step 2: Scale by √d
+    scale = query.size(-1) ** 0.5
+    attn_scores = attn_scores / scale
+
+    # Apply causal mask (lower triangle only)
+    seq_len = attn_scores.size(-1)
+    causal_mask = torch.tril(torch.ones((seq_len, seq_len), device=attn_scores.device)).unsqueeze(0).unsqueeze(0)
+    attn_scores = attn_scores.masked_fill(causal_mask == 0, float('-inf'))
+
+    # Step 4: Apply attention mask (already broadcastable to shape)
+    if attention_mask is not None:
+        attn_scores += attention_mask
+
+    # Softmax
+    attn_probs = torch.softmax(attn_scores, dim=-1)
+
+    # Dropout
+    attn_probs = self.dropout(attn_probs)
+
+    # Step 7: Multiply with value
+    context = torch.matmul(attn_probs, value)
+
+    # Rearrange back to [bs, seq_len, hidden_size]
+    context = rearrange(context, 'b h t d -> b t (h d)')
+
+    raise context
 
 
   def forward(self, hidden_states, attention_mask):
