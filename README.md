@@ -595,7 +595,7 @@ If you use the released WheelSonnet models, please cite:
 
 ```bibtex
 @misc{wheelsonnet2025,
-  author       = {Nabin Sharma},
+  author       = {Nabin Oli},
   title        = {WheelSonnet: GPT-2 Fine-Tuned for Shakespearean Sonnet Generation},
   year         = {2025},
   publisher    = {Hugging Face},
